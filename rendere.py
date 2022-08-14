@@ -70,7 +70,13 @@ def draw_bus(surface,bus:Bus,node_positions):
     HEIGHT= 7
     WIDTH = 10
     BUS_COLOR = YELLOW
-    draw_pos = node_positions[bus.current]
+    draw_pos1 = node_positions[bus.current]
+    if(bus.destination is None):
+        draw_pos = draw_pos1
+    else:
+        draw_pos2 = node_positions[bus.destination]
+        percentage = bus.fractional_progress()
+        draw_pos  = tuple(a+percentage*(b) for a,b in zip(draw_pos1,draw_pos2))
     draw_pos = [draw_pos[0] - WIDTH/2,draw_pos[1]-HEIGHT/2]
     pygame.draw.rect(surface,BUS_COLOR,(*draw_pos,WIDTH,HEIGHT))
 def generate_random_passenger(count,limit):

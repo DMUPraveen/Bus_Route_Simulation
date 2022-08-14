@@ -30,7 +30,8 @@ class Simulation_Engine:
         pas.calculate_path(self.roads,disfunc)
         for u,v in edge_iterator(pas.path):
             upgrade(self.roads.get_edge_parameter(u,v))
-
+    def add_bus(self,node,speed,capcity=float('inf')):
+        self.buses.append(Bus(capcity,speed,node))
     def run_iteration(self):
         delta = 1
         self.global_clock.tick(delta)
@@ -50,9 +51,21 @@ class Simulation_Engine:
                 #We have found a descent edge to follow next we have to load the appropriate passengers and update the weight of the graph as well
                 passengers = self.edgegroups.get_passsengers(*best_edge)
                 downgrade(self.roads.get_edge_parameter(*best_edge),len(passengers))
+                for p in passengers:
+                    p.move()
+
                 bus.load_passengers_and_start(passengers,best_edge[0],best_edge[1],self.roads.get_edge_parameter(*best_edge).distance)
                 
 
             else:
                 #There are no passengers going from the current node now we have to find a node that does!
-                pass
+                best = None
+                best_distance = float('inf')
+                for u,v in self.edgegroups.dic:
+                    if(self.edgegroups.dic[(u,v)]):
+                       path,dis = self.roads.shortest(current_node,u)
+                       if(dis < best_distance):
+                            best = path[0]
+                if(best is not None):
+                    bus.load_passengers_and_start([],current_node,best,self.roads.get_edge_parameter(current_node,best).distance)
+            
