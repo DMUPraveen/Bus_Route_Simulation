@@ -16,7 +16,7 @@ def main():
     pygame.display.set_caption(TITLE)
     running = True
     clock = pygame.time.Clock()
-    connections,positions = generate_square_grid_map(10,10) 
+    connections,positions = generate_square_grid_map(10,10,SCREEN_WIDTH,SCREEN_HEIGHT) 
     simulation = Simulation_Engine(connections)
     
     for pas in generate_random_passenger(200,100):

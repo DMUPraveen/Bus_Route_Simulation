@@ -98,7 +98,7 @@ def main_test():
     pygame.display.set_caption("Testing the Graphics")
     running = True
     clock = pygame.time.Clock()
-    connections,positions = generate_square_grid_map(10,10) 
+    connections,positions = generate_square_grid_map(10,10,SCREEN_WIDTH,SCREEN_HEIGHT) 
 
     passengers = generate_random_passenger(200,100) 
     busses = generate_random_bus_positions(10,100)
