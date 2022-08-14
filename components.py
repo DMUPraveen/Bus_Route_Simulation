@@ -2,17 +2,19 @@ from collections import defaultdict
 from queue import PriorityQueue
 import unittest
 class Bus:
-    def __init__(self,capacity,speed):
+    def __init__(self,capacity,speed,node):
         self.capacity = capacity
         self.speed = speed
         self.passengers = []
+        self.node =node 
+
 
 
 class Passenger:
     def __init__(self,start,end):
         self.start = start
         self.end = end
-
+        self.current = start
 class Graph:
     def __init__(self,edge_list):
         #edge list needs to be given in the (u,v,d) format where u->v road has distance(or time cost) of d

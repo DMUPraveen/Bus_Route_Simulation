@@ -1,10 +1,13 @@
 import pygame
 # from collections import defaultdict
+from random import random,randint,seed
+from components import Passenger,Bus
 
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 GREEN = (0, 255, 0)
 RED = (255, 0, 0)
+YELLOW = (255,255,0)
 
 NODE_SIZE = 5 
 NODE_COLOR = BLACK
@@ -47,11 +50,28 @@ def generate_random_map(n):
     return connections,positions
 
 
+def draw_passenger(surface,passenger:Passenger,node_positions):
+    OFFSET_LIMIT= 10
+    PASS_SIZE = 3
+    PASSENGER_COLOR = RED
+    draw_pos = node_positions[passenger.current]
+    seed(passenger.start*passenger.end)
+    draw_pos = tuple(i+(random()-0.5)*OFFSET_LIMIT for i in draw_pos)
+    pygame.draw.circle(surface,PASSENGER_COLOR,draw_pos,PASS_SIZE) 
 
 
-
-
-
+def draw_bus(surface,bus:Bus,node_positions):
+    HEIGHT= 7
+    WIDTH = 10
+    BUS_COLOR = YELLOW
+    draw_pos = node_positions[bus.node]
+    draw_pos = [draw_pos[0] - WIDTH/2,draw_pos[1]-HEIGHT/2]
+    pygame.draw.rect(surface,BUS_COLOR,(*draw_pos,WIDTH,HEIGHT))
+def generate_random_passenger(count,limit):
+    return [Passenger(randint(0,limit-1),randint(0,limit-1)) for _ in range(count)]
+    
+def generate_random_bus_positions(count,limit):
+    return [Bus(float('inf'),1,randint(0,limit-1)) for _ in range(count)]
 
 
 
@@ -87,6 +107,8 @@ def main_test():
     # Used to manage how fast the screen updates
     clock = pygame.time.Clock()
     connections,positions = generate_random_map(10) 
+    passengers = generate_random_passenger(200,100) 
+    busses = generate_random_bus_positions(10,100)
     # -------- Main Program Loop -----------
     while not done:
         # --- Main event loop
@@ -106,7 +128,11 @@ def main_test():
         screen.fill(WHITE)
         draw_roads(screen,positions,connections) 
         # --- Drawing code should go here
-    
+        for passenger in passengers:
+            
+            draw_passenger(screen,passenger,positions)
+        for bus in busses:
+            draw_bus(screen,bus,positions)
         # --- Go ahead and update the screen with what we've drawn.
         pygame.display.flip()
     
