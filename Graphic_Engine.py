@@ -20,7 +20,7 @@ ROAD_COLOR = BLACK
 
 
 
-class Graphic_Enign:
+class Graphic_Engine:
     def __init__(self,node_positions,connections,pygame_surface):
         self.node_positions = node_positions
         self.connections = connections
@@ -103,7 +103,7 @@ def main_test():
     passengers = generate_random_passenger(200,100) 
     busses = generate_random_bus_positions(10,100)
 
-    gfx = Graphic_Enign(positions,connections,screen)
+    gfx = Graphic_Engine(positions,connections,screen)
 
     while running:
         for event in pygame.event.get():
