@@ -1,6 +1,5 @@
 from collections import defaultdict
 from queue import PriorityQueue
-from turtle import Turtle 
 import unittest
 class Bus:
     def __init__(self,capacity,speed):
@@ -25,13 +24,19 @@ class Graph:
     def get_weight(self,u,v):
         return self.edge_map[(u,v)] 
     def shortest(self,start,end):
+        '''
+        Finds the shortest distance between start and end
+        Usefull when finding shortest routes for the busses to take
+        Implementation of Dijkstra
+        '''
         current = (0,start,None) #start node has zero cost (cost,node_index)
         #so that automatic sorting works
         visited = set()
         pq = PriorityQueue()
         pq.put(current)
         pre_map = {}
-        while(True):
+        end_weight = None
+        while(not pq.empty()):
             current = pq.get()
             if(current[1] in visited):
                 continue
@@ -40,6 +45,7 @@ class Graph:
             pre_map[current_node] = pre
 
             if(current_node == end):
+                end_weight = current_w
                 break
 
 
@@ -48,13 +54,14 @@ class Graph:
                     pq.put((current_w+self.get_weight(current_node,child),
                             child,current_node))
             visited.add(current_node)
-
+        else:
+            raise Exception(f"Desitnation is unrachable {start}->{end}")
         path = []
         node = end
         while(node !=None):
             path.append(node)
             node = pre_map[node] 
-        return path
+        return path,end_weight
 
 
 
@@ -84,9 +91,10 @@ class Test_pathfinder(unittest.TestCase):
         reverse_graph = [(j,i,d) for(i,j,d) in example_graph]
         full_graph = example_graph+reverse_graph
         gg = Graph(full_graph)
-        shortest = gg.shortest("S","E")
+        shortest,dis = gg.shortest("S","E")
         print(shortest)
         assert(shortest == ['E', 'G', 'H', 'B', 'S'])
+        assert(dis == 7)
 
 
 
