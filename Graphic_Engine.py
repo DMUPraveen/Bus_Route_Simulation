@@ -62,7 +62,7 @@ class Graphic_Engine:
         else:
             draw_pos2 = self.node_positions[bus.destination]
             percentage = bus.fractional_progress()
-            draw_pos  = tuple(a+percentage*(b) for a,b in zip(draw_pos1,draw_pos2))
+            draw_pos  = tuple((1-percentage)*a+percentage*(b) for a,b in zip(draw_pos1,draw_pos2))
         draw_pos = [draw_pos[0] - WIDTH/2,draw_pos[1]-HEIGHT/2]
         pygame.draw.rect(self.surface,BUS_COLOR,(*draw_pos,WIDTH,HEIGHT))
 

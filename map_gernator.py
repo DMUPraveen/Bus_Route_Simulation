@@ -32,4 +32,4 @@ def generate_random_passenger(count,limit):
     return [Passenger(randint(0,limit-1),randint(0,limit-1)) for _ in range(count)]
     
 def generate_random_bus_positions(count,limit):
-    return [Bus(float('inf'),1,randint(0,limit-1)) for _ in range(count)]
+    return [Bus(float('inf'),0.1,randint(0,limit-1)) for _ in range(count)]

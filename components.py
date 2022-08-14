@@ -150,7 +150,7 @@ class Bus:
         '''
         returns how much progress has been made by the bus on its journey as a floating point value between 0 and 1
         '''
-        if(self.distance_to_go == 0):
+        if(self.total_distance == 0 or self.total_distance is None):
             return 0
         return self.distance_to_go/self.total_distance
 

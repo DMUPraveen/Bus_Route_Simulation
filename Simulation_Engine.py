@@ -47,7 +47,10 @@ class Simulation_Engine:
                 continue
             #The bus has arrived at its destination
             passengers = bus.arrive_and_unload_passengers()
+            for pas in passengers:
+                pas.move()
             self.edgegroups.load_passengers(passengers)
+            
             #Now the passengers have been unloaded
 
             #Its time to load more passengers
@@ -57,8 +60,6 @@ class Simulation_Engine:
                 #We have found a descent edge to follow next we have to load the appropriate passengers and update the weight of the graph as well
                 passengers = self.edgegroups.get_passsengers(*best_edge)
                 downgrade(self.roads.get_edge_parameter(*best_edge),len(passengers))
-                for p in passengers:
-                    p.move()
 
                 bus.load_passengers_and_start(passengers,best_edge[0],best_edge[1],self.roads.get_edge_parameter(*best_edge).distance)
                 
