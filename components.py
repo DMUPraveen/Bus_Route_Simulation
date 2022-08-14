@@ -63,12 +63,13 @@ class Graph:
         while(node !=None):
             path.append(node)
             node = pre_map[node] 
-        return path,end_weight
+        return list(reversed(path)),end_weight
 
 
 
 class Test_pathfinder(unittest.TestCase):
-    def  test_on_example_graph(self):
+    def setUp(self) -> None:
+        
         example_graph = [
             ("S","A",7),
             ("S","B",2),
@@ -92,12 +93,17 @@ class Test_pathfinder(unittest.TestCase):
         ]
         reverse_graph = [(j,i,d) for(i,j,d) in example_graph]
         full_graph = example_graph+reverse_graph
-        gg = Graph(full_graph)
-        shortest,dis = gg.shortest("S","E")
+        self.gg = Graph(full_graph)
+    def test_path1(self):
+        shortest,dis = self.gg.shortest("S","E")
         print(shortest)
-        assert(shortest == ['E', 'G', 'H', 'B', 'S'])
+        assert(shortest == ['S', 'B', 'H', 'G', 'E'])
         assert(dis == 7)
-
+    def test_path_no_path(self):
+        shortest,dis = self.gg.shortest("S","S")
+        print(shortest)
+        assert(shortest == ["S"])
+        assert(dis == 0)
 
 
 if __name__ == "__main__":
