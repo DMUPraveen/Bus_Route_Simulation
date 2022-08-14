@@ -4,8 +4,13 @@ import unittest
 from typing import List,Dict,Tuple,Any
 
 
-
-
+class GlobalClock:
+    def __init__(self):
+        self.time = 0
+    def now(self):
+        return self.time
+    def tick(self,delta = 1):
+        self.time +=delta 
 class EdgeParameters:
     def __init__(self,distance):
         self.distance = distance
@@ -25,6 +30,8 @@ class Graph:
         return self.edge_map[(u,v)]
     def default_disfunc(self,edgeparameter):
         return edgeparameter.distance
+    def get_children(self,node):
+        return self.dic[node][::]
     def shortest(self,start,end,disfunc=None):
         '''
         Finds the shortest distance between start and end
@@ -77,8 +84,8 @@ class Passenger:
         self.path = []
         self.goal_reached = False
         self.limbo = False
-    def calculate_path(self,graph:Graph):
-        self.path,_ = graph.shortest(self.start,self.end,self.disfunc)
+    def calculate_path(self,graph:Graph,disfunc):
+        self.path,_ = graph.shortest(self.start,self.end,disfunc)
     def move(self):
         if(len(self.path) < 2):
             raise Exception("Called move on already reached passenger")
@@ -86,6 +93,7 @@ class Passenger:
         end = self.path[0]
         if(len(self.path) == 1):
             self.goal_reached = True
+        
         return (start,end)
 
     def path_to_go(self):
@@ -93,8 +101,6 @@ class Passenger:
             raise Exception("Passenger has no where to go!")
         return (self.path[0],self.path[1])
 
-    def disfunc(self,e:EdgeParameters):
-        return e.distance
 
     def score(self):
         return 1
@@ -151,10 +157,12 @@ class EdgeGroups:
         self.dic:Dict[Tuple[Any,Any],List[Passenger]] = defaultdict(lambda:[])
         
     def get_passsengers(self,u,v)->List[Passenger]:
+        '''
+        returns the passengers waiting to go along a certain edge.
+        Does not move them (does not call .move method) this must be done before they are passe into the bus
+        '''
         
         ret = self.dic[(u,v)][::]
-        for p in ret:
-            p.move()
         self.dic[(u,v)].clear()
         return ret
     def load_passengers(self,passengers:List[Passenger]):
@@ -164,11 +172,25 @@ class EdgeGroups:
             else:
                 u,v = passenger.path_to_go()
                 self.dic[u,v].append(passenger)
+    def add_passenger(self,passenger:Passenger):
+        u,v = passenger.path_to_go()
+        self.dic[u,v].append(passenger)
         
+
+    
 
     def calculate_passegner_score(self,u,v):
         return sum(p.score() for p in self.dic[(u,v)])
 
+    def best_of(self,edge_list:List[Tuple[Any,Any]]):
+        best_score = 0
+        best_edge = None
+        for u,v in edge_list:
+            score = self.calculate_passegner_score(u,v)
+            if(score > best_score):
+                best_score = score
+            best_edge = (u,v)
+        return best_edge
 
 
 
