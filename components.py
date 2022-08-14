@@ -2,6 +2,8 @@ from collections import defaultdict
 from queue import PriorityQueue
 import unittest
 from typing import List,Dict,Tuple,Any
+import logging
+logging.basicConfig(level=logging.DEBUG)
 
 
 class GlobalClock:
@@ -98,6 +100,7 @@ class Passenger:
 
     def path_to_go(self):
         if(len(self.path) < 2):
+            logging.warning(f"The path is too small {self.path,self.end,self.start}")
             raise Exception("Passenger has no where to go!")
         return (self.path[0],self.path[1])
 
@@ -135,6 +138,9 @@ class Bus:
         '''
         Updates the position of the bus according to the time passed and returns whether it has reached its destination or not
         '''
+        if(self.distance_to_go is None):
+            self.destination = self.current
+            return True
         self.distance_to_go -= delta*self.speed
         if(self.distance_to_go <= 0):
             self.distance_to_go = 0

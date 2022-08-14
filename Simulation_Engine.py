@@ -1,6 +1,10 @@
 from components import Bus,Passenger,EdgeGroups,Graph,EdgeParameters,GlobalClock
 import logging
 from typing import List,Iterable,Any
+
+
+
+logging.basicConfig(level=logging.DEBUG)
 def disfunc(e:EdgeParameters):
     return e.distance
 
@@ -19,19 +23,21 @@ class Simulation_Engine:
         self.roads = Graph(graph_conections)
         self.passengers:List[Passenger] = []
         self.buses:List[Bus] = []
-        self.logger = logging.Logger("SIMULATION_ENGINE")
         self.edgegroups = EdgeGroups()
         self.global_clock =GlobalClock() 
-    def add_passenger(self,start,end):
-        if(start == end):
-            self.logger.info("Passengers destination is the same as the starting position --IGNORING")
-        pas = Passenger(start,end)
+    def add_passenger(self,pas:Passenger):
+        logging.info("Adding Passenger")
+        if(pas.start == pas.end):
+            logging.info("Passengers destination is the same as the starting position --IGNORING")
+            return
+        # pas = Passenger(start,end)
         self.passengers.append(pas)
         pas.calculate_path(self.roads,disfunc)
         for u,v in edge_iterator(pas.path):
             upgrade(self.roads.get_edge_parameter(u,v))
-    def add_bus(self,node,speed,capcity=float('inf')):
-        self.buses.append(Bus(capcity,speed,node))
+        self.edgegroups.add_passenger(pas)
+    def add_bus(self,bus:Bus):
+        self.buses.append(bus)
     def run_iteration(self):
         delta = 1
         self.global_clock.tick(delta)
