@@ -8,6 +8,7 @@ WHITE = (255, 255, 255)
 GREEN = (0, 255, 0)
 RED = (255, 0, 0)
 YELLOW = (255,255,0)
+BLUE = (0,0,255)
 
 NODE_SIZE = 5 
 NODE_COLOR = BLACK
@@ -53,18 +54,23 @@ def generate_random_map(n):
 def draw_passenger(surface,passenger:Passenger,node_positions):
     OFFSET_LIMIT= 10
     PASS_SIZE = 3
-    PASSENGER_COLOR = RED
+    FINISHED_PASSENGER = BLUE
+    UNFINISHED_PASSENGER = RED
+    PASSENGER_COLOR = FINISHED_PASSENGER if passenger.goal_reached else UNFINISHED_PASSENGER 
+    if(passenger.limbo):
+        return
     draw_pos = node_positions[passenger.current]
-    seed(passenger.start*passenger.end)
+    seed(passenger.start*passenger.end*passenger.current)
     draw_pos = tuple(i+(random()-0.5)*OFFSET_LIMIT for i in draw_pos)
     pygame.draw.circle(surface,PASSENGER_COLOR,draw_pos,PASS_SIZE) 
+
 
 
 def draw_bus(surface,bus:Bus,node_positions):
     HEIGHT= 7
     WIDTH = 10
     BUS_COLOR = YELLOW
-    draw_pos = node_positions[bus.node]
+    draw_pos = node_positions[bus.current]
     draw_pos = [draw_pos[0] - WIDTH/2,draw_pos[1]-HEIGHT/2]
     pygame.draw.rect(surface,BUS_COLOR,(*draw_pos,WIDTH,HEIGHT))
 def generate_random_passenger(count,limit):
