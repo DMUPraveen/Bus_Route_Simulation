@@ -101,7 +101,7 @@ def main_test():
     connections,positions = generate_square_grid_map(10,10,SCREEN_WIDTH,SCREEN_HEIGHT) 
 
     passengers = generate_random_passenger(200,100) 
-    busses = generate_random_bus_positions(10,100)
+    busses = generate_random_bus_positions(10,100,0.3)
 
     gfx = Graphic_Engine(positions,connections,screen)
 

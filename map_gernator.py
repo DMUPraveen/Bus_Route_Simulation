@@ -32,5 +32,5 @@ def generate_square_grid_map(n,distance,width,height):
 def generate_random_passenger(count,limit):
     return [Passenger(randint(0,limit-1),randint(0,limit-1)) for _ in range(count)]
     
-def generate_random_bus_positions(count,limit):
-    return [Bus(float('inf'),0.3,randint(0,limit-1)) for _ in range(count)]
+def generate_random_bus_positions(count,limit,speed):
+    return [Bus(float('inf'),speed,randint(0,limit-1)) for _ in range(count)]
