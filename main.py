@@ -9,7 +9,7 @@ def main():
     pygame.init()
     size = (SCREEN_WIDTH, SCREEN_HEIGHT)
     screen = pygame.display.set_mode(size)
-    pygame.display.set_caption("Testing the Graphics")
+    pygame.display.set_caption(TITLE)
     running = True
     clock = pygame.time.Clock()
     connections,positions = generate_square_grid_map(10,10) 
