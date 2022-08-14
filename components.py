@@ -95,7 +95,7 @@ class Passenger:
         end = self.path[0]
         if(len(self.path) == 1):
             self.goal_reached = True
-        
+        self.current = end
         return (start,end)
 
     def path_to_go(self):
@@ -169,6 +169,8 @@ class EdgeGroups:
         '''
         
         ret = self.dic[(u,v)][::]
+        for pas in ret:
+            pas.limbo = False
         self.dic[(u,v)].clear()
         return ret
     def load_passengers(self,passengers:List[Passenger]):
@@ -178,6 +180,7 @@ class EdgeGroups:
             else:
                 u,v = passenger.path_to_go()
                 self.dic[u,v].append(passenger)
+                passenger.limbo = True
     def add_passenger(self,passenger:Passenger):
         u,v = passenger.path_to_go()
         self.dic[u,v].append(passenger)
@@ -195,7 +198,7 @@ class EdgeGroups:
             score = self.calculate_passegner_score(u,v)
             if(score > best_score):
                 best_score = score
-            best_edge = (u,v)
+                best_edge = (u,v)
         return best_edge
 
 

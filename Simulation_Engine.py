@@ -72,7 +72,7 @@ class Simulation_Engine:
                     if(self.edgegroups.dic[(u,v)]):
                        path,dis = self.roads.shortest(current_node,u)
                        if(dis < best_distance):
-                            best = path[0]
+                            best = path[1]
                 if(best is not None):
                     bus.load_passengers_and_start([],current_node,best,self.roads.get_edge_parameter(current_node,best).distance)
             
