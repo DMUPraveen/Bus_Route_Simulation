@@ -3,9 +3,13 @@ import pygame
 from map_gernator import generate_random_bus_positions,generate_random_passenger,generate_square_grid_map
 from Graphic_Engine import Graphic_Engine
 from Simulation_Engine import Simulation_Engine
+from video_recorder import Recorder
 
 
 
+
+RECORD_FLAG = True
+VIDEO_OUT_FILE = "Simulation.avi"
 SCREEN_WIDTH = 700
 SCREEN_HEIGHT = 500
 TITLE = "Bus Route Simulation"
@@ -31,6 +35,10 @@ def main():
 
     gfx = Graphic_Engine(positions,connections,screen)
 
+    recorder =None
+    if(RECORD_FLAG):
+        recorder = Recorder(SCREEN_WIDTH,SCREEN_HEIGHT,60,VIDEO_OUT_FILE)
+
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -39,8 +47,11 @@ def main():
         gfx.draw_all(simulation.buses,simulation.passengers)
         simulation.run_iteration()
         pygame.display.flip()
+        if(recorder is not None):
+            recorder.record_frame(screen)
         clock.tick(60)
-    
+    if(recorder is not None):
+        recorder.end_recording() 
     pygame.quit()
 
 
