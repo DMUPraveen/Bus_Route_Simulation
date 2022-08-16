@@ -18,6 +18,7 @@ NUMBER_OF_BUSSES = 10
 GRID_SIZE = 10 #10x10 grid
 GRID_DISTANCE = 10
 BUS_SPEED = 0.3
+CLOSE_AFTER_SIMULATION = True
 def main():
     pygame.init()
     size = (SCREEN_WIDTH, SCREEN_HEIGHT)
@@ -44,14 +45,21 @@ def main():
             if event.type == pygame.QUIT:
                 running = False
 
+        if(simulation.finished()):
+            running = False
+            continue
+
         gfx.draw_all(simulation.buses,simulation.passengers)
         simulation.run_iteration()
         pygame.display.flip()
         if(recorder is not None):
             recorder.record_frame(screen)
         clock.tick(60)
+
+
     if(recorder is not None):
         recorder.end_recording() 
+    print(f"The simulations ran for {simulation.simulation_time()}")
     pygame.quit()
 
 

@@ -25,8 +25,15 @@ class Simulation_Engine:
         self.buses:List[Bus] = []
         self.edgegroups = EdgeGroups()
         self.global_clock =GlobalClock() 
+    def simulation_time(self):
+        return self.global_clock.now()
+    def finished(self)->bool:
+        for pas in self.passengers:
+            if(not pas.goal_reached):
+                return False
+        return True
     def add_passenger(self,pas:Passenger):
-        logging.info("Adding Passenger")
+        # logging.info("Adding Passenger")
         if(pas.start == pas.end):
             logging.info("Passengers destination is the same as the starting position --IGNORING")
             return
