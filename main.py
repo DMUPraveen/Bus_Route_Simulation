@@ -19,6 +19,8 @@ GRID_SIZE = 10 #10x10 grid
 GRID_DISTANCE = 10
 BUS_SPEED = 0.3
 CLOSE_AFTER_SIMULATION = True
+PASSENGER_ADD_INTERVAL = 10_000
+NODE_COUNT = GRID_SIZE*GRID_SIZE
 def main():
     pygame.init()
     size = (SCREEN_WIDTH, SCREEN_HEIGHT)
@@ -29,9 +31,9 @@ def main():
     connections,positions = generate_square_grid_map(GRID_SIZE,GRID_DISTANCE,SCREEN_WIDTH,SCREEN_HEIGHT) 
     simulation = Simulation_Engine(connections)
     
-    for pas in generate_random_passenger(NUMBER_OF_PASSENGERS,100):
+    for pas in generate_random_passenger(NUMBER_OF_PASSENGERS,NODE_COUNT):
         simulation.add_passenger(pas) 
-    for bus in generate_random_bus_positions(NUMBER_OF_BUSSES,100,BUS_SPEED):
+    for bus in generate_random_bus_positions(NUMBER_OF_BUSSES,NODE_COUNT,BUS_SPEED):
         simulation.add_bus(bus)
 
     gfx = Graphic_Engine(positions,connections,screen)
@@ -39,7 +41,7 @@ def main():
     recorder =None
     if(RECORD_FLAG):
         recorder = Recorder(SCREEN_WIDTH,SCREEN_HEIGHT,60,VIDEO_OUT_FILE)
-
+    passenger_added_time = 0
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -55,6 +57,10 @@ def main():
         if(recorder is not None):
             recorder.record_frame(screen)
         clock.tick(60)
+        if(simulation.simulation_time() - passenger_added_time > PASSENGER_ADD_INTERVAL):
+            passenger_added_time = simulation.simulation_time()
+            simulation.add_passenger(generate_random_passenger(1,NODE_COUNT)[0])
+
 
 
     if(recorder is not None):
