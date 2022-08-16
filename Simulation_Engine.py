@@ -7,7 +7,8 @@ from typing import List,Iterable,Any
 logging.basicConfig(level=logging.DEBUG)
 def disfunc(e:EdgeParameters):
     return e.distance
-
+def improved_disfunc(e:EdgeParameters):
+    return e.distance/(0.2*e.weight+1)
 def upgrade(e:EdgeParameters):
     e.weight += 1
 
@@ -17,6 +18,7 @@ def downgrade(e:EdgeParameters,val=1):
 def edge_iterator(path:List[Any])->Iterable[Any]:
     return ((path[i],path[i+1]) for i in range(0,len(path)-1))
     
+DISFUNC_USED = disfunc
 
 class Simulation_Engine:
     def __init__(self,graph_conections):
@@ -39,7 +41,7 @@ class Simulation_Engine:
             return
         # pas = Passenger(start,end)
         self.passengers.append(pas)
-        pas.calculate_path(self.roads,disfunc)
+        pas.calculate_path(self.roads,DISFUNC_USED)
         for u,v in edge_iterator(pas.path):
             upgrade(self.roads.get_edge_parameter(u,v))
         self.edgegroups.add_passenger(pas)
